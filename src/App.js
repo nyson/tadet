@@ -1,42 +1,8 @@
 import './App.css';
-import {useState, useEffect} from 'react';
-
-const NOTE_PRESS_DOWN_EC = 146;
-const NOTE_PRESS_UP_EC = 130;
-
-
-const noterange = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]; // oct 2 to 8
-const start = ["A", "A#", "B"]; // oct 1
-const end = ["C"]; // oct 9
-
-function octave(notes, start, pitchSuffix){
-  let i = start;
-  let suffixedNotes = notes.map(x => x + "" + pitchSuffix);
-  var o = {};
-  suffixedNotes.forEach(note => {
-    var index = i++;
-    o[index] = {value: index, name: note, flat: note.includes("#")}
-  });
-  return o;
-} 
-
-function piano88keys() {
-  let octaves = [];
-  octaves.push(octave(start, 21, 1));
-  for(var i = 2; i <= 8; i++){
-    octaves.push(octave(noterange, 24 + 12*(i-2), i))
-  }
-  octaves.push(octave(end, 108, 9))
- 
-  let piano = {};
-  for(var o of octaves) {
-    for(var k in o) {
-      piano[k] = o[k];
-    }
-  }
-
-  return piano;
-}
+import {useState} from 'react';
+import {piano88keys} from './noteLib.js';
+import Piano from './Piano.js';
+import Bar from './Bar.js';
 
 function midifail(){
   console.log("Could not access midi");
@@ -71,42 +37,10 @@ function App() {
 
   return (
     <div className="App">
-      {Object.keys(notes).map(i => 
-        <Key 
-          listenToMidiEvents={addMidiListener}
-          note={notes[i]}
-          key={i}>
-        </Key>
-      )}
+      <Bar />
+      <Piano addMidiListener={addMidiListener} notes={notes} />
     </div>
   );
-}
-
-function Key(props) {
-  const [on, switchOn] = useState(false);
-  useEffect(() => {
-    props.listenToMidiEvents(props.note.value, eventCode => {
-      switch(eventCode) {
-        case NOTE_PRESS_DOWN_EC: 
-          switchOn(true);
-          break;
-        case NOTE_PRESS_UP_EC:
-          switchOn(false);
-          break;
-        default: break;
-      }
-    });
-  });
-
-  let cl = "key " 
-    + (on ? "enabled" : "disabled") 
-    + (props.note.flat ? " flat" : "")
-  return (<div 
-    key={props.keyValue}
-    className = {cl}
-    >
-      {"(" + props.note.value + ") " + props.note.name}
-  </div>)
 }
 
 export default App;
