@@ -11,7 +11,7 @@
   padding-bottom: 3px;
   margin-left: 1px;
   box-shadow: 2px 2px 1px grey;
-
+  border: 1px solid #aaa;
 }
 
 .key.flat {
@@ -31,12 +31,22 @@
   height: 150px;
 }
 
-.key.disabled {
-  border: 1px solid #aaa;
+.key.playing:not(.flat) {
+  background-color: aqua;
+  color: #000;
 }
 
-.key.enabled {
-  border: 1px solid #c0f;
-  background-color: aqua;
+.key.playing.flat {
+  background-color: purple;
+  color: #fff;
+}
+
+.key.pressed:not(.flat) {
+  background-color: green;
+  color: #fff;
+}
+
+.key.pressed.flat {
+  background-color: lightgreen;
   color: #000;
 }

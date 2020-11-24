@@ -22,7 +22,7 @@ function App() {
     console.log("midi event! ", eventCode, key, wrapper.srcElement.id, wrapper);
     if(listeners.length === 0) return;
     if(listeners[key] !== undefined) {
-      console.log("listener triggered!", key, eventCode)
+      console.log("listener triggered!", key, key % 12, eventCode)
       listeners[key](eventCode);
     }
     else 
@@ -38,7 +38,11 @@ function App() {
   return (
     <div className="App">
       <Bar />
-      <Piano addMidiListener={addMidiListener} notes={notes} />
+      <Piano 
+        addMidiListener={addMidiListener} 
+        keyEventHandler={note => console.log("playing note", note.value, note)}
+        notes={notes} 
+        />
     </div>
   );
 }
