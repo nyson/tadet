@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from 'react';
+import {note} from './noteLib';
 
 const FillWithPath = (ctx, f) => {
   ctx.beginPath();
@@ -7,40 +8,31 @@ const FillWithPath = (ctx, f) => {
   ctx.fill();
 }
 
+const Clear = canvasRef => {
+  const canvas = canvasRef.current;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  ctx.fillStyle = 'black';
+}
+
+const DrawBar = canvasRef => {
+  const ctx = canvasRef.current.getContext('2d');
+  [...Array(5).keys()]
+    .map(n => (n+1)*10)
+    .map(h => ctx.fillRect(10, h, 100, 1));
+}
+
 const Draw = canvasRef => {
+  DrawBar(canvasRef);
   const canvas = canvasRef.current;
   const ctx = canvas.getContext('2d');
 
-  ctx.clearRect(0,0,canvas.width, canvas.height);
   ctx.fillStyle = 'black';
-  
-  ctx.fillRect(10, 10, 100, 1);
-  ctx.fillRect(10, 20, 100, 1);
-  ctx.fillRect(10, 30, 100, 1);
-  ctx.fillRect(10, 40, 100, 1);
-  ctx.fillRect(10, 50, 100, 1);
-
-  // ctx.beginPath();
-  // ctx.ellipse(30, 15, 6, 5, 0, 0, 2*Math.PI);
-  // ctx.closePath();
-  // ctx.fill();
-
-  // ctx.beginPath();
-  // ctx.ellipse(30, 30, 6, 5, 0, 0, 2*Math.PI);
-  // ctx.closePath();
-  // ctx.fill();
-
-  // ctx.beginPath();
-  // ctx.ellipse(19, 35, 6, 5, 0, 0, 2*Math.PI);
-  // ctx.closePath();
-  // ctx.fill();
-  
-  DrawNote(ctx, {value:53}, false);
-  DrawNote(ctx, {value:57}, false);
-  DrawNote(ctx, {value:60}, false);
-  DrawNote(ctx, {value:64}, false);
-
-  ctx.fillRect(44,10, 1, 50)
+  DrawChord(ctx, [
+    {value: 53}, 
+    {value: 57},
+    {value: 60},
+    {value: 64}])
 }
 
 /// Returns an integer range from a to b
@@ -75,15 +67,22 @@ const DrawNote = (ctx, note, onLeftSide = false) => {
 }
 
 /// Draw a chord
-const DrawChord = notes => {
+const DrawChord = (ctx, notes) => {
+  Object.values(notes).map(n => DrawNote(ctx, n, false))
 
+  ctx.fillRect(44,10, 1, 50)
 }
 
 const Bar = props => {
   const canvasRef = useRef(null);
+  useEffect(() => {
+    Clear(canvasRef);
+    DrawBar(canvasRef);
+    console.log([...Array(12).keys()].map(n => note(n+60)));
+  });
 
   return (<>
-    <canvas ref={canvasRef}></canvas>
+    <canvas ref={canvasRef} />
     <button onClick={() => Draw(canvasRef)}>Draw!</button>
   </>)
 }

@@ -32,7 +32,7 @@ function Key(props) {
   });
 
   let cl = "key " 
-    + (on ? "playing" : "") 
+    + (on ? "playing" : "")
     + (props.note.flat ? " flat" : "")
     + (pressed ? " pressed" : "")
   return (<div 

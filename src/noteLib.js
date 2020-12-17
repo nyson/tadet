@@ -17,6 +17,24 @@ function octave(notes, start, pitchSuffix){
   return o;
 } 
 
+export function note(noteVal) {
+  const oct = Math.floor(noteVal/12);
+  return { 
+    0:  {oct: oct, pos: 0, mod: "nat"},     // C
+    1:  {oct: oct, pos: 0, mod: "sharp"},   // C#
+    2:  {oct: oct, pos: 1, mod: "nat"},     // D
+    3:  {oct: oct, pos: 1, mod: "sharp"},   // D#
+    4:  {oct: oct, pos: 2, mod: "nat"},     // E
+    5:  {oct: oct, pos: 3, mod: "nat"},     // F
+    6:  {oct: oct, pos: 3, mod: "sharp"},   // F#
+    7:  {oct: oct, pos: 4, mod: "nat"},     // G
+    8:  {oct: oct, pos: 4, mod: "sharp"},   // G#
+    9:  {oct: oct, pos: 5, mod: "nat"},     // A
+    10: {oct: oct, pos: 5, mod: "sharp"},   // A"
+    11: {oct: oct, pos: 6, mod: "nat"},     // B
+  }[noteVal % 12]
+}
+
 export function piano88keys() {
   let octaves = [];
   octaves.push(octave(start, 21, 1));
